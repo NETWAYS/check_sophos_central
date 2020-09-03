@@ -88,3 +88,13 @@ func (o *EndpointOverview) GetOutput(limit int) (s string) {
 
 	return
 }
+
+func (o *EndpointOverview) GetPerfdata() string {
+	return PerfdataList{
+		{Name: "endpoints_total", Value: fmt.Sprintf("%d", o.Total)},
+		{Name: "endpoints_good", Value: fmt.Sprintf("%d", len(o.Good))},
+		{Name: "endpoints_bad", Value: fmt.Sprintf("%d", len(o.Bad))},
+		{Name: "endpoints_suspicious", Value: fmt.Sprintf("%d", len(o.Suspicious))},
+		{Name: "endpoints_unknown", Value: fmt.Sprintf("%d", len(o.Unknown))},
+	}.String()
+}

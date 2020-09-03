@@ -29,6 +29,7 @@ CRITICAL - no alerts - endpoints: 2 good, 3 bad, 6 suspicious
 ## Endpoints
 bad: HOST1, HOST2, HOST6
 suspicious: HOST11, HOST12, HOST13, HOST14, HOST15, ...
+| 'alerts'=0 'alerts_high'=0 'alerts_medium'=0 'alerts_low'=0 'endpoints_total'=11 'endpoints_good'=2 'endpoints_bad'=3 'endpoints_suspicious'=6 'endpoints_unknown'=0
 ```
 
 ## API Documentation

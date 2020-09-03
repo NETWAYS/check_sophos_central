@@ -95,7 +95,8 @@ func (c *Config) Run() (rc int, output string, err error) {
 		rc = rcAlerts
 	}
 
-	// TODO: perfdata
+	// Add Perfdata
+	output += "| " + alerts.GetPerfdata() + " " + endpoints.GetPerfdata()
 
 	return
 }

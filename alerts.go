@@ -85,3 +85,12 @@ func (o *AlertOverview) GetOutput() (s string) {
 
 	return
 }
+
+func (o *AlertOverview) GetPerfdata() string {
+	return PerfdataList{
+		{Name: "alerts", Value: fmt.Sprintf("%d", o.Total)},
+		{Name: "alerts_high", Value: fmt.Sprintf("%d", o.High)},
+		{Name: "alerts_medium", Value: fmt.Sprintf("%d", o.Medium)},
+		{Name: "alerts_low", Value: fmt.Sprintf("%d", o.Low)},
+	}.String()
+}
