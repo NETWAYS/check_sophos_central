@@ -9,6 +9,7 @@ func main() {
 
 	plugin := check.NewConfig()
 	plugin.Name = "check_sophos_central"
+	plugin.Readme = `Check the status of alerts and endpoints over the API of the Sophos Central cloud service`
 	plugin.Version = buildVersion()
 	plugin.Timeout = 30
 

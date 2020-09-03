@@ -1,6 +1,35 @@
 check_sophos_central
 ====================
 
+Check the status of alerts and endpoints over the API of the Sophos Central cloud service.
+
+The plugin currently checks the state of all alerts and endpoints within a tenant, you need to supply API Token
+(ID and secret) for a single tenant.
+
+## Usage
+
+```
+Arguments:
+      --client-id string       API Client ID (env:SOPHOS_CLIENT_ID)
+      --client-secret string   API Client Secret (env:SOPHOS_CLIENT_SECRET)
+      --show-all               List all non-ok endpoints
+      --api string             API Base URL (default "https://api.central.sophos.com")
+  -t, --timeout int            Abort the check after n seconds (default 30)
+  -d, --debug                  Enable debug mode
+  -v, --verbose                Enable verbose mode
+  -V, --version                Print version and exit
+```
+
+## Example
+
+```
+$ ./check_sophos_central --client-id efce870a-6c53-4a6b-8c49-864894b9d8ee --client-secret thatwouldbeagoodjoke
+CRITICAL - no alerts - endpoints: 2 good, 3 bad, 6 suspicious
+
+## Endpoints
+bad: HOST1, HOST2, HOST6
+suspicious: HOST11, HOST12, HOST13, HOST14, HOST15, ...
+```
 
 ## API Documentation
 
