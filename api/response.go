@@ -39,8 +39,13 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 
 	for {
 		r := request.Clone(ctx)
-		// TODO: cleaner way to do this?
-		r.URL.RawQuery += "&pageFromKey=" + url.QueryEscape(nextKey)
+		if nextKey != "" {
+			if r.URL.RawQuery != "" {
+				r.URL.RawQuery += "&"
+			}
+
+			r.URL.RawQuery += "pageFromKey=" + url.QueryEscape(nextKey)
+		}
 
 		httpResponse, err = c.HttpClient.Do(r)
 		if err != nil {
@@ -51,6 +56,7 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		// read response body
 		body, err = ioutil.ReadAll(httpResponse.Body)
 		if err != nil {
+			err = fmt.Errorf("could not retrieve response body: %w", err)
 			return
 		}
 
@@ -64,6 +70,7 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		// parse response
 		err = json.Unmarshal(body, &response)
 		if err != nil {
+			err = fmt.Errorf("could not decode JSON from body: %w", err)
 			return
 		}
 

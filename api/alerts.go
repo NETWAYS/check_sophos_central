@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"time"
 )
 
 type Alert struct {
@@ -23,7 +24,7 @@ type Alert struct {
 	// other, endpoint, server, mobile, encryption, emailGateway, webGateway, phishThreat, wireless, iaas, firewall
 	Product string `json:"product"`
 	// When the alert was triggered.
-	RaisedAt string `json:"raisedAt"`
+	RaisedAt time.Time `json:"raisedAt"`
 	// Severity levels for alerts.
 	//
 	// The following values are allowed:

@@ -58,12 +58,13 @@ func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.R
 		err = fmt.Errorf("DataURL is not set, call whoami first")
 		return
 	}
+
 	if c.TenantID == "" {
 		err = fmt.Errorf("TenantID is not configured")
 		return
 	}
 
-	req, err = http.NewRequest("GET", c.DataURL+"/"+url, body)
+	req, err = http.NewRequest(method, c.DataURL+"/"+url, body)
 	if err != nil {
 		return
 	}

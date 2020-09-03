@@ -33,7 +33,8 @@ func (c *Client) WhoAmI() (err error) {
 	}
 
 	info := &UserInfo{}
-	err = json.Unmarshal(body, &info)
+
+	err = json.Unmarshal(body, info)
 	if err != nil {
 		return
 	}
