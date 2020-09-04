@@ -47,9 +47,8 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 			r.URL.RawQuery += "pageFromKey=" + url.QueryEscape(nextKey)
 		}
 
-		httpResponse, err = c.HttpClient.Do(r)
+		httpResponse, err = c.Do(r)
 		if err != nil {
-			err = fmt.Errorf("HTTP request failed: %w", err)
 			return
 		}
 

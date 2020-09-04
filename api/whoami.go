@@ -5,6 +5,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
+	"net/http"
 )
 
 type UserInfo struct {
@@ -14,9 +15,13 @@ type UserInfo struct {
 }
 
 func (c *Client) WhoAmI() (err error) {
-	resp, err := c.HttpClient.Get(c.GetCommonURL("/whoami/v1"))
+	req, err := c.NewRequest(http.MethodGet, "whoami/v1", nil)
 	if err != nil {
-		err = fmt.Errorf("whoami request failed: %w", err)
+		return
+	}
+
+	resp, err := c.Do(req)
+	if err != nil {
 		return
 	}
 

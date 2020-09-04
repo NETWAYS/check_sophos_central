@@ -31,7 +31,12 @@ func NewClient(id, secret string) (c *Client) {
 		BaseURL: DefaultURL,
 	}
 
-	ctx := context.Background()
+	// Prepare custom client that using a logging transport
+	client := http.DefaultClient
+	client.Transport = LoggingRoundTripper{http.DefaultTransport}
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, client)
+
+	// Setup authentication
 	c.AuthConfig = &clientcredentials.Config{
 		ClientID:       id,
 		ClientSecret:   secret,
@@ -45,12 +50,13 @@ func NewClient(id, secret string) (c *Client) {
 	return
 }
 
-func (c *Client) GetCommonURL(urlPart string) string {
-	if urlPart[0] != '/' {
-		urlPart = "/" + urlPart
+func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
+	req, err = http.NewRequest(method, c.BaseURL+"/"+url, body)
+	if err != nil {
+		err = fmt.Errorf("could not create http request: %w", err)
 	}
 
-	return c.BaseURL + urlPart
+	return
 }
 
 func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.Request, err error) {
@@ -66,10 +72,20 @@ func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.R
 
 	req, err = http.NewRequest(method, c.DataURL+"/"+url, body)
 	if err != nil {
+		err = fmt.Errorf("could not create http request: %w", err)
 		return
 	}
 
 	req.Header.Set("X-Tenant-ID", c.TenantID)
+
+	return
+}
+
+func (c *Client) Do(req *http.Request) (res *http.Response, err error) {
+	res, err = c.HttpClient.Do(req)
+	if err != nil {
+		err = fmt.Errorf("HTTP request failed: %w", err)
+	}
 
 	return
 }
