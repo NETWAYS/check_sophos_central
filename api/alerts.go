@@ -14,10 +14,10 @@ type Alert struct {
 	// endpointFirewall, fenc, forensicSnapshot, general, iaas, iaasAzure, isolation, malware, mtr, mobiles, policy,
 	// protection, pua, runtimeDetections, security, smc, systemHealth, uav, uncategorized, updating, utm, virt,
 	// wireless, xgEmail
-	Category     string          `json:"category"`
-	Description  string          `json:"description"`
-	GroupKey     string          `json:"groupKey"`
-	ManagedAgent json.RawMessage `json:"managedAgent"`
+	Category     string            `json:"category"`
+	Description  string            `json:"description"`
+	GroupKey     string            `json:"groupKey"`
+	ManagedAgent AlertManagedAgent `json:"managedAgent"`
 	// Product types.
 	//
 	// The following values are allowed:
@@ -31,6 +31,11 @@ type Alert struct {
 	// high, medium, low
 	Severity string `json:"severity"`
 	// Alert type.
+	Type string `json:"type"`
+}
+
+type AlertManagedAgent struct {
+	ID   string `json:"id"`
 	Type string `json:"type"`
 }
 
