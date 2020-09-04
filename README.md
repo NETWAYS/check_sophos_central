@@ -24,7 +24,11 @@ Arguments:
 
 ```
 $ ./check_sophos_central --client-id efce870a-6c53-4a6b-8c49-864894b9d8ee --client-secret thatwouldbeagoodjoke
-CRITICAL - no alerts - endpoints: 2 good, 3 bad, 6 suspicious
+CRITICAL - alerts: 2 medium - endpoints: 2 good, 3 bad, 6 suspicious
+
+## Alerts
+2020-09-04 07:31 CEST [medium] TEST (server) PUA detected: 'PsExec' at 'E:\UserShares$\Max Mustermann\Desktop\PSTools.zip\PsExec.exe\FILE:0000'
+2020-09-04 07:31 CEST [medium] TEST (server) PUA detected: 'PsKill' at 'E:\UserShares$\Max Mustermann\Desktop\PSTools.zip\pskill.exe'
 
 ## Endpoints
 bad: HOST1, HOST2, HOST6
