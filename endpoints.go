@@ -14,8 +14,11 @@ type EndpointOverview struct {
 	Unknown    []string
 }
 
-func CheckEndpoints(client *api.Client) (o *EndpointOverview, err error) {
+type EndpointNames map[string]string
+
+func CheckEndpoints(client *api.Client) (o *EndpointOverview, names EndpointNames, err error) {
 	o = &EndpointOverview{}
+	names = EndpointNames{}
 
 	endpoints, err := client.GetEndpoints()
 	if err != nil {
@@ -23,6 +26,8 @@ func CheckEndpoints(client *api.Client) (o *EndpointOverview, err error) {
 	}
 
 	for _, endpoint := range endpoints {
+		names[endpoint.ID] = endpoint.Hostname
+
 		o.Total++
 
 		switch endpoint.Health.Overall {

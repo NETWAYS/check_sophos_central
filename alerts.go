@@ -15,7 +15,7 @@ type AlertOverview struct {
 	Output []string
 }
 
-func CheckAlerts(client *api.Client) (o *AlertOverview, err error) {
+func CheckAlerts(client *api.Client, names EndpointNames) (o *AlertOverview, err error) {
 	o = &AlertOverview{}
 
 	alerts, err := client.GetAlerts()
@@ -35,8 +35,14 @@ func CheckAlerts(client *api.Client) (o *AlertOverview, err error) {
 			o.Low++
 		}
 
-		output := fmt.Sprintf("[%s] %s: %s group=%s",
-			alert.RaisedAt, alert.Type, alert.Description, alert.GroupKey)
+		agentName := alert.ManagedAgent.ID
+		if val, ok := names[agentName]; ok {
+			agentName = val
+		}
+
+		output := fmt.Sprintf("%s [%s] %s (%s) %s",
+			alert.RaisedAt.Format("2006-01-02 15:04"),
+			alert.Severity, agentName, alert.Product, alert.Description)
 		o.Output = append(o.Output, output)
 	}
 
@@ -79,7 +85,7 @@ func (o *AlertOverview) GetOutput() (s string) {
 		return
 	}
 
-	s = "\n## Alerts"
+	s = "\n## Alerts\n"
 	s += strings.Join(o.Output, "\n")
 	s += "\n"
 

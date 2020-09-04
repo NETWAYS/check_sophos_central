@@ -61,14 +61,14 @@ func (c *Config) Run() (rc int, output string, err error) {
 
 	log.WithField("context-id", client.UserInfo.ID).Debug("successfully authenticated with the API")
 
-	// Retrieve and check alerts
-	alerts, err := CheckAlerts(client)
+	// Retrieve and check endpoints
+	endpoints, names, err := CheckEndpoints(client)
 	if err != nil {
 		return
 	}
 
-	// Retrieve and check endpoints
-	endpoints, err := CheckEndpoints(client)
+	// Retrieve and check alerts
+	alerts, err := CheckAlerts(client, names)
 	if err != nil {
 		return
 	}
