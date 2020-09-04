@@ -41,7 +41,7 @@ func CheckAlerts(client *api.Client, names EndpointNames) (o *AlertOverview, err
 		}
 
 		output := fmt.Sprintf("%s [%s] %s (%s) %s",
-			alert.RaisedAt.Format("2006-01-02 15:04"),
+			alert.RaisedAt.Local().Format("2006-01-02 15:04 MST"),
 			alert.Severity, agentName, alert.Product, alert.Description)
 		o.Output = append(o.Output, output)
 	}
