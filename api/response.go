@@ -34,7 +34,7 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		httpResponse *http.Response
 		body         []byte
 		nextKey      string
-		response     ResponseBody
+		response     *ResponseBody
 	)
 
 	for {
@@ -67,7 +67,9 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		}
 
 		// parse response
-		err = json.Unmarshal(body, &response)
+		response = &ResponseBody{}
+
+		err = json.Unmarshal(body, response)
 		if err != nil {
 			err = fmt.Errorf("could not decode JSON from body: %w", err)
 			return
@@ -79,9 +81,13 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		}
 
 		// set nextKey or break iteration when done
-		nextKey = response.Pages.NextKey
-		if nextKey == "" {
+		if response.Pages.NextKey == "" {
 			break
+		} else if response.Pages.NextKey == nextKey {
+			err = fmt.Errorf("iteration error in pages, nextKey is the same as fromKey: %s", nextKey)
+			return
+		} else {
+			nextKey = response.Pages.NextKey
 		}
 	}
 
