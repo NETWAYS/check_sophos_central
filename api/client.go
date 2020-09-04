@@ -15,7 +15,7 @@ const (
 	DefaultURL      = "https://api.central.sophos.com"
 	AuthTokenURL    = "https://id.sophos.com/api/v2/oauth2/token" //nolint:gosec
 	DefaultTimeout  = 5
-	DefaultPageSize = 200
+	DefaultPageSize = 100
 )
 
 type Client struct {
