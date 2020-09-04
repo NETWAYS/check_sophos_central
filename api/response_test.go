@@ -4,6 +4,7 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -37,7 +38,7 @@ func TestClient_GetResults(t *testing.T) {
 
 	httpmock.RegisterResponder("GET", "https://api-eu01.central.sophos.com/common/v1/test",
 		func(req *http.Request) (*http.Response, error) {
-			if req.URL.RawQuery == "pageFromKey=abcdef" {
+			if strings.Contains(req.URL.RawQuery, "pageFromKey=abcdef") {
 				return httpmock.NewStringResponse(200, testResponseSecond), nil
 			}
 			return httpmock.NewStringResponse(200, testResponse), nil
