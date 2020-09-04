@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	DefaultURL     = "https://api.central.sophos.com"
-	AuthTokenURL   = "https://id.sophos.com/api/v2/oauth2/token" //nolint:gosec
-	DefaultTimeout = 5
+	DefaultURL      = "https://api.central.sophos.com"
+	AuthTokenURL    = "https://id.sophos.com/api/v2/oauth2/token" //nolint:gosec
+	DefaultTimeout  = 5
+	DefaultPageSize = 200
 )
 
 type Client struct {
@@ -24,11 +25,13 @@ type Client struct {
 	DataURL    string
 	UserInfo   *UserInfo
 	TenantID   string
+	PageSize   uint32
 }
 
 func NewClient(id, secret string) (c *Client) {
 	c = &Client{
-		BaseURL: DefaultURL,
+		BaseURL:  DefaultURL,
+		PageSize: DefaultPageSize,
 	}
 
 	// Prepare custom client that using a logging transport

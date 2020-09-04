@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type ResponseBody struct {
@@ -36,6 +37,15 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		nextKey      string
 		response     *ResponseBody
 	)
+
+	// Set default page size if not set
+	if !strings.Contains(request.URL.RawQuery, "pageSize=") {
+		if request.URL.RawQuery != "" {
+			request.URL.RawQuery += "&"
+		}
+
+		request.URL.RawQuery += fmt.Sprintf("pageSize=%d", c.PageSize)
+	}
 
 	for {
 		r := request.Clone(ctx)
