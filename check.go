@@ -15,6 +15,7 @@ type Config struct {
 	ClientSecret string
 	ApiBaseUrl   string
 	ShowAll      bool
+	PageSize     uint32
 }
 
 func BuildConfigFlags(fs *pflag.FlagSet) (config *Config) {
@@ -23,6 +24,7 @@ func BuildConfigFlags(fs *pflag.FlagSet) (config *Config) {
 	fs.StringVar(&config.ClientID, "client-id", "", "API Client ID (env:SOPHOS_CLIENT_ID)")
 	fs.StringVar(&config.ClientSecret, "client-secret", "", "API Client Secret (env:SOPHOS_CLIENT_SECRET)")
 	fs.BoolVar(&config.ShowAll, "show-all", false, "List all non-ok endpoints")
+	fs.Uint32Var(&config.PageSize, "page-size", api.DefaultPageSize, "Amount of objects to fetch during each API call")
 
 	fs.StringVar(&config.ApiBaseUrl, "api", api.DefaultURL, "API Base URL")
 
@@ -53,6 +55,7 @@ func (c *Config) Validate() (err error) {
 func (c *Config) Run() (rc int, output string, err error) {
 	// Setup API client
 	client := api.NewClient(c.ClientID, c.ClientSecret)
+	client.PageSize = c.PageSize
 
 	err = client.WhoAmI()
 	if err != nil {

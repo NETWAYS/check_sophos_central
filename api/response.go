@@ -3,9 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type ResponseBody struct {
@@ -34,8 +36,17 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		httpResponse *http.Response
 		body         []byte
 		nextKey      string
-		response     ResponseBody
+		response     *ResponseBody
 	)
+
+	// Set default page size if not set
+	if !strings.Contains(request.URL.RawQuery, "pageSize=") {
+		if request.URL.RawQuery != "" {
+			request.URL.RawQuery += "&"
+		}
+
+		request.URL.RawQuery += fmt.Sprintf("pageSize=%d", c.PageSize)
+	}
 
 	for {
 		r := request.Clone(ctx)
@@ -47,9 +58,8 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 			r.URL.RawQuery += "pageFromKey=" + url.QueryEscape(nextKey)
 		}
 
-		httpResponse, err = c.HttpClient.Do(r)
+		httpResponse, err = c.Do(r)
 		if err != nil {
-			err = fmt.Errorf("HTTP request failed: %w", err)
 			return
 		}
 
@@ -63,12 +73,20 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		httpResponse.Body.Close()
 
 		if httpResponse.StatusCode != 200 {
+			log.WithFields(log.Fields{
+				"status": httpResponse.StatusCode,
+				"body":   string(body),
+			}).Debug("HTTP returned non-ok result")
+
 			err = fmt.Errorf("HTTP request returned non-ok status: %s", httpResponse.Status)
+
 			return
 		}
 
 		// parse response
-		err = json.Unmarshal(body, &response)
+		response = &ResponseBody{}
+
+		err = json.Unmarshal(body, response)
 		if err != nil {
 			err = fmt.Errorf("could not decode JSON from body: %w", err)
 			return
@@ -80,9 +98,13 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		}
 
 		// set nextKey or break iteration when done
-		nextKey = response.Pages.NextKey
-		if nextKey == "" {
+		if response.Pages.NextKey == "" {
 			break
+		} else if response.Pages.NextKey == nextKey {
+			err = fmt.Errorf("iteration error in pages, nextKey is the same as fromKey: %s", nextKey)
+			return
+		} else {
+			nextKey = response.Pages.NextKey
 		}
 	}
 
