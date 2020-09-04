@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -72,7 +73,13 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		httpResponse.Body.Close()
 
 		if httpResponse.StatusCode != 200 {
+			log.WithFields(log.Fields{
+				"status": httpResponse.StatusCode,
+				"body":   string(body),
+			}).Debug("HTTP returned non-ok result")
+
 			err = fmt.Errorf("HTTP request returned non-ok status: %s", httpResponse.Status)
+
 			return
 		}
 
