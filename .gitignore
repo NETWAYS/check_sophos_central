@@ -3,3 +3,5 @@
 /build/
 check_sophos_central
 .env*
+*.out
+coverage.html
