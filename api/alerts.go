@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -32,6 +33,20 @@ type Alert struct {
 	Severity string `json:"severity"`
 	// Alert type.
 	Type string `json:"type"`
+}
+
+func (a *Alert) String() string {
+	return fmt.Sprintf(
+		"%v [%v] %v %v %v %v %v %v",
+		a.RaisedAt.Format("2006-01-02 15:04"),
+		a.Severity,
+		a.ID,
+		a.Product,
+		a.Description,
+		a.Type,
+		a.Category,
+		a.GroupKey,
+	)
 }
 
 type AlertManagedAgent struct {

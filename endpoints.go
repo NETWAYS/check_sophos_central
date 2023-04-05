@@ -16,7 +16,7 @@ type EndpointOverview struct {
 
 type EndpointNames map[string]string
 
-func CheckEndpoints(client *api.Client) (o *EndpointOverview, names EndpointNames, err error) {
+func CheckEndpoints(client *api.Client, endpointsToExclude []string) (o *EndpointOverview, names EndpointNames, err error) { //nolint:lll
 	o = &EndpointOverview{}
 	names = EndpointNames{}
 
@@ -26,6 +26,12 @@ func CheckEndpoints(client *api.Client) (o *EndpointOverview, names EndpointName
 	}
 
 	for _, endpoint := range endpoints {
+		if matches(endpoint.String(), endpointsToExclude) {
+			// If the endpoint matches a regex from the list
+			// we can skip it
+			continue
+		}
+
 		names[endpoint.ID] = endpoint.Hostname
 
 		o.Total++

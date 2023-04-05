@@ -1,10 +1,12 @@
 package api_test
 
 import (
+	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+	"time"
 )
 
 const alertsResponse = `{
@@ -37,6 +39,39 @@ const alertsResponse = `{
 		}
 	]
 }`
+
+func TestAlert_String(t *testing.T) {
+	testcases := map[string]struct {
+		alert    api.Alert
+		expected string
+	}{
+		"default": {
+			alert: api.Alert{
+				RaisedAt: time.Date(2009, time.November, 11, 23, 0, 0, 0, time.UTC),
+			},
+			expected: "2009-11-11 23:00 []      ",
+		},
+		"custom-alert": {
+			alert: api.Alert{
+				ID:          "ID1",
+				RaisedAt:    time.Date(2009, time.November, 11, 23, 0, 0, 0, time.UTC),
+				Category:    "Cat",
+				Description: "Desc",
+				GroupKey:    "GK",
+				Product:     "Product",
+				Severity:    "critical",
+				Type:        "type",
+			},
+			expected: "2009-11-11 23:00 [critical] ID1 Product Desc type Cat GK",
+		},
+	}
+
+	for name, tc := range testcases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.expected, tc.alert.String())
+		})
+	}
+}
 
 func TestClient_GetAlerts(t *testing.T) {
 	c := envClient(t)
