@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -87,6 +88,35 @@ const endpointsResponse = `{
         }
     ]
 }`
+
+func TestEndpoint_String(t *testing.T) {
+	testcases := map[string]struct {
+		endpoint api.Endpoint
+		expected string
+	}{
+		"default": {
+			endpoint: api.Endpoint{},
+			expected: " []  ",
+		},
+		"custom-endpoint": {
+			endpoint: api.Endpoint{
+				Hostname: "hostname",
+				ID:       "ID",
+				Health: api.EndpointHealth{
+					Overall: "cataclysmic",
+				},
+				Type: "Typ",
+			},
+			expected: "hostname [cataclysmic] ID Typ",
+		},
+	}
+
+	for name, tc := range testcases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.expected, tc.endpoint.String())
+		})
+	}
+}
 
 func TestClient_GetEndpoints(t *testing.T) {
 	c := envClient(t)

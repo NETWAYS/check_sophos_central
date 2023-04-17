@@ -15,7 +15,9 @@ type AlertOverview struct {
 	Output []string
 }
 
-func CheckAlerts(client *api.Client, names EndpointNames) (o *AlertOverview, err error) {
+// Retrieve and process Alerts
+// alertsToExclude is a list of strings that can the used to exclude alerts
+func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []string) (o *AlertOverview, err error) {
 	o = &AlertOverview{}
 
 	alerts, err := client.GetAlerts()
@@ -24,6 +26,12 @@ func CheckAlerts(client *api.Client, names EndpointNames) (o *AlertOverview, err
 	}
 
 	for _, alert := range alerts {
+		if matches(alert.String(), alertsToExclude) {
+			// If the alert matches a regex from the list
+			// we can skip it
+			continue
+		}
+
 		o.Total++
 
 		switch strings.ToLower(alert.Severity) {

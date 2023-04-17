@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type Endpoint struct {
@@ -30,6 +31,16 @@ type EndpointHealth struct {
 	Services json.RawMessage `json:"services"`
 	// Threats on the endpoint.
 	Threats json.RawMessage `json:"threats"`
+}
+
+func (e *Endpoint) String() string {
+	return fmt.Sprintf(
+		"%v [%v] %v %v",
+		e.Hostname,
+		e.Health.Overall,
+		e.ID,
+		e.Type,
+	)
 }
 
 func (c *Client) GetEndpoints() (endpoints []*Endpoint, err error) {

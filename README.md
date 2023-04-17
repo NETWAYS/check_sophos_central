@@ -10,14 +10,17 @@ The plugin currently checks the state of all alerts and endpoints within a tenan
 
 ```
 Arguments:
-      --client-id string       API Client ID (env:SOPHOS_CLIENT_ID)
-      --client-secret string   API Client Secret (env:SOPHOS_CLIENT_SECRET)
-      --show-all               List all non-ok endpoints
-      --api string             API Base URL (default "https://api.central.sophos.com")
-  -t, --timeout int            Abort the check after n seconds (default 30)
-  -d, --debug                  Enable debug mode
-  -v, --verbose                Enable verbose mode
-  -V, --version                Print version and exit
+      --client-id string               API Client ID (env:SOPHOS_CLIENT_ID)
+      --client-secret string           API Client Secret (env:SOPHOS_CLIENT_SECRET)
+      --show-all                       List all non-ok endpoints
+      --page-size uint32               Amount of objects to fetch during each API call (default 100)
+      --exclude-alert stringArray      Alerts to ignore. Can be used multiple times and supports regex.
+      --exclude-endpoint stringArray   Endpoints to ignore. Can be used multiple times and supports regex.
+      --api string                     API Base URL (default "https://api.central.sophos.com")
+  -t, --timeout int                    Abort the check after n seconds (default 30)
+  -d, --debug                          Enable debug mode
+  -v, --verbose                        Enable verbose mode
+  -V, --version                        Print version and exit
 ```
 
 ## Example
