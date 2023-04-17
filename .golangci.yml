@@ -1,19 +1,25 @@
 run:
   deadline: 1m
+  skip-files:
+    - '(.+)_test\.go'
 
 linters:
   disable-all: false
   enable:
-    #- funlen
+    - funlen
     - dogsled
     - dupl
     - lll
     - whitespace
     - wsl
+    - exportloopref
   disable:
-    - noctx
+    - scopelint
+    - deadcode
+    - structcheck
+    - varcheck
+    - musttag
   presets:
     - bugs
     - unused
-    # - style
   fast: false
