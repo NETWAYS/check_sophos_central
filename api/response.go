@@ -30,6 +30,7 @@ type PageInfo struct {
 	Total int `json:"total"`
 }
 
+// nolint: funlen
 func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err error) {
 	var (
 		ctx          = request.Context()

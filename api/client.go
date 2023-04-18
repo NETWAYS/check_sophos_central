@@ -54,7 +54,7 @@ func NewClient(id, secret string) (c *Client) {
 }
 
 func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
-	req, err = http.NewRequest(method, c.BaseURL+"/"+url, body)
+	req, err = http.NewRequestWithContext(context.Background(), method, c.BaseURL+"/"+url, body)
 	if err != nil {
 		err = fmt.Errorf("could not create http request: %w", err)
 	}
@@ -73,7 +73,8 @@ func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.R
 		return
 	}
 
-	req, err = http.NewRequest(method, c.DataURL+"/"+url, body)
+	req, err = http.NewRequestWithContext(context.Background(), method, c.DataURL+"/"+url, body)
+
 	if err != nil {
 		err = fmt.Errorf("could not create http request: %w", err)
 		return
