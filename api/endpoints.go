@@ -44,7 +44,7 @@ func (e *Endpoint) String() string {
 }
 
 func (c *Client) GetEndpoints() (endpoints []*Endpoint, err error) {
-	req, err := c.NewDataRequest("GET", "endpoint/v1/endpoints", nil)
+	req, err := c.NewDataRequest("GET", "endpoint/v1/endpoints", nil) //nolint: noctx
 	if err != nil {
 		return
 	}

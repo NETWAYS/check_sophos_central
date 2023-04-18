@@ -15,7 +15,7 @@ type UserInfo struct {
 }
 
 func (c *Client) WhoAmI() (err error) {
-	req, err := c.NewRequest(http.MethodGet, "whoami/v1", nil)
+	req, err := c.NewRequest(http.MethodGet, "whoami/v1", nil) //nolint: noctx
 	if err != nil {
 		return
 	}
