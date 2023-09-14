@@ -1,25 +1,36 @@
 run:
-  deadline: 1m
-  skip-files:
-    - '(.+)_test\.go'
-
+  timeout: 5m
+  tests: false
 linters:
-  disable-all: false
-  enable:
-    - funlen
-    - dogsled
-    - dupl
-    - lll
-    - whitespace
-    - wsl
-    - exportloopref
-  disable:
-    - scopelint
-    - deadcode
-    - structcheck
-    - varcheck
-    - musttag
-  presets:
-    - bugs
-    - unused
-  fast: false
+   enable-all: true
+   disable:
+     - cyclop
+     - depguard
+     - exhaustivestruct
+     - exhaustruct
+     - forbidigo
+     - forcetypeassert
+     - gci
+     - gochecknoglobals
+     - gochecknoinits
+     - godox
+     - goerr113
+     - gofumpt
+     - gomnd
+     - ifshort
+     - lll
+     - musttag
+     - nakedret
+     - nlreturn
+     - nolintlint
+     - nonamedreturns
+     - tagliatelle
+     - varnamelen
+     - wrapcheck
+linters-settings:
+   estif:
+     min-complexity: 4
+   maligned:
+     suggest-new: true
+   funlen:
+     lines: 80

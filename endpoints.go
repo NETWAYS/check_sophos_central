@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
 )
@@ -69,6 +70,7 @@ func (o *EndpointOverview) GetSummary() (s string) {
 }
 
 func (o *EndpointOverview) GetStatus() int {
+	// nolint: gocritic
 	if len(o.Bad) > 0 {
 		return check.Critical
 	} else if len(o.Suspicious) > 0 || len(o.Unknown) > 0 {

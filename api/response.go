@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"net/url"
@@ -40,7 +39,7 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		response     *ResponseBody
 	)
 
-	// Set default page size if not set
+	// Set default page size if not set.
 	if !strings.Contains(request.URL.RawQuery, "pageSize=") {
 		if request.URL.RawQuery != "" {
 			request.URL.RawQuery += "&"
@@ -64,7 +63,7 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 			return
 		}
 
-		// read response body
+		// Read response body.
 		body, err = io.ReadAll(httpResponse.Body)
 		if err != nil {
 			err = fmt.Errorf("could not retrieve response body: %w", err)
@@ -73,18 +72,13 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 
 		httpResponse.Body.Close()
 
-		if httpResponse.StatusCode != 200 {
-			log.WithFields(log.Fields{
-				"status": httpResponse.StatusCode,
-				"body":   string(body),
-			}).Debug("HTTP returned non-ok result")
-
-			err = fmt.Errorf("HTTP request returned non-ok status: %s", httpResponse.Status)
+		if httpResponse.StatusCode != http.StatusOK {
+			err = fmt.Errorf("HTTP request returned non-ok status: status=%s body=%s", httpResponse.Status, string(body))
 
 			return
 		}
 
-		// parse response
+		// Parse response.
 		response = &ResponseBody{}
 
 		err = json.Unmarshal(body, response)
@@ -93,12 +87,11 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 			return
 		}
 
-		// retrieve items from response
-		for _, item := range response.Items {
-			items = append(items, item)
-		}
+		// Retrieve items from response.
+		items = append(items, response.Items...)
 
-		// set nextKey or break iteration when done
+		// Set nextKey or break iteration when done.
+		// nolint: gocritic
 		if response.Pages.NextKey == "" {
 			break
 		} else if response.Pages.NextKey == nextKey {

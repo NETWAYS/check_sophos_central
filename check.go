@@ -2,16 +2,16 @@ package main
 
 import (
 	"errors"
-	"github.com/NETWAYS/check_sophos_central/api"
-	"github.com/NETWAYS/go-check"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/pflag"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/NETWAYS/check_sophos_central/api"
+	"github.com/NETWAYS/go-check"
+	"github.com/spf13/pflag"
 )
 
-// Matches a list of regular expressions against a string
+// Matches a list of regular expressions against a string.
 func matches(input string, regexToExclude []string) bool {
 	for _, regex := range regexToExclude {
 		re := regexp.MustCompile(regex)
@@ -26,7 +26,7 @@ func matches(input string, regexToExclude []string) bool {
 type Config struct {
 	ClientID         string
 	ClientSecret     string
-	ApiBaseUrl       string
+	APIBaseURL       string
 	ShowAll          bool
 	PageSize         uint32
 	ExcludeAlerts    []string
@@ -43,7 +43,7 @@ func BuildConfigFlags(fs *pflag.FlagSet) (config *Config) {
 	fs.StringArrayVar(&config.ExcludeAlerts, "exclude-alert", []string{}, "Alerts to ignore. Can be used multiple times and supports regex.")          //nolint:lll
 	fs.StringArrayVar(&config.ExcludeEndpoints, "exclude-endpoint", []string{}, "Endpoints to ignore. Can be used multiple times and supports regex.") //nolint:lll
 
-	fs.StringVar(&config.ApiBaseUrl, "api", api.DefaultURL, "API Base URL")
+	fs.StringVar(&config.APIBaseURL, "api", api.DefaultURL, "API Base URL")
 
 	return
 }
@@ -56,21 +56,18 @@ func (c *Config) SetFromEnv() {
 	if c.ClientSecret == "" {
 		c.ClientSecret = os.Getenv("SOPHOS_CLIENT_SECRET")
 	}
-
-	return
 }
 
-func (c *Config) Validate() (err error) {
+func (c *Config) Validate() error {
 	if c.ClientID == "" || c.ClientSecret == "" {
-		err = errors.New("client-id and client-secret are required")
-		return
+		return errors.New("client-id and client-secret are required")
 	}
 
-	return
+	return nil
 }
 
 func (c *Config) Run() (rc int, output string, err error) {
-	// Setup API client
+	// Setup API client.
 	client := api.NewClient(c.ClientID, c.ClientSecret)
 	client.PageSize = c.PageSize
 
@@ -79,21 +76,19 @@ func (c *Config) Run() (rc int, output string, err error) {
 		return
 	}
 
-	log.WithField("context-id", client.UserInfo.ID).Debug("successfully authenticated with the API")
-
-	// Retrieve and check endpoints
+	// Retrieve and check endpoints.
 	endpoints, names, err := CheckEndpoints(client, c.ExcludeEndpoints)
 	if err != nil {
 		return
 	}
 
-	// Retrieve and check alerts
+	// Retrieve and check alerts.
 	alerts, err := CheckAlerts(client, names, c.ExcludeAlerts)
 	if err != nil {
 		return
 	}
 
-	// Build output
+	// Build output.
 	limit := 5
 	if c.ShowAll {
 		limit = 0
@@ -107,6 +102,7 @@ func (c *Config) Run() (rc int, output string, err error) {
 	rcAlerts := alerts.GetStatus()
 	rcEndpoints := endpoints.GetStatus()
 
+	// nolint: gocritic
 	if rcAlerts == check.Critical || rcEndpoints == check.Critical {
 		rc = check.Critical
 	} else if rcEndpoints > rcAlerts {
@@ -115,7 +111,7 @@ func (c *Config) Run() (rc int, output string, err error) {
 		rc = rcAlerts
 	}
 
-	// Add Perfdata
+	// Add Perfdata.
 	output += "| " + alerts.GetPerfdata() + " " + endpoints.GetPerfdata()
 
 	return
