@@ -3,15 +3,16 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type UserInfo struct {
 	ID       string            `json:"id"`
 	IDType   string            `json:"idType"`
-	ApiHosts map[string]string `json:"apiHosts"`
+	APIHosts map[string]string `json:"apiHosts"`
 }
 
 func (c *Client) WhoAmI() (err error) {
@@ -27,7 +28,7 @@ func (c *Client) WhoAmI() (err error) {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		err = fmt.Errorf("whoami request failed with status: %s", resp.Status)
 		return
 	}
@@ -47,12 +48,12 @@ func (c *Client) WhoAmI() (err error) {
 	c.UserInfo = info
 
 	// parse and set additional API endpoints
-	if val, ok := info.ApiHosts["global"]; ok && c.BaseURL != val {
+	if val, ok := info.APIHosts["global"]; ok && c.BaseURL != val {
 		log.WithField("url", val).Debug("Updating BaseURL for API from whoami global info")
 		c.BaseURL = val
 	}
 
-	if val, ok := info.ApiHosts["dataRegion"]; ok {
+	if val, ok := info.APIHosts["dataRegion"]; ok {
 		log.WithField("url", val).Debug("Setting DataURL for API from whoami dataRegion info")
 		c.DataURL = val
 	} else {

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
-	"strings"
 )
 
 type AlertOverview struct {
@@ -15,8 +16,8 @@ type AlertOverview struct {
 	Output []string
 }
 
-// Retrieve and process Alerts
-// alertsToExclude is a list of strings that can the used to exclude alerts
+// Retrieve and process Alerts.
+// alertsToExclude is a list of strings that can the used to exclude alerts.
 func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []string) (o *AlertOverview, err error) {
 	o = &AlertOverview{}
 
@@ -27,8 +28,7 @@ func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []stri
 
 	for _, alert := range alerts {
 		if matches(alert.String(), alertsToExclude) {
-			// If the alert matches a regex from the list
-			// we can skip it
+			// If the alert matches a regex from the list we can skip it.
 			continue
 		}
 
@@ -49,6 +49,7 @@ func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []stri
 		}
 
 		output := fmt.Sprintf("%s [%s] %s (%s) %s",
+			//nolint: gosmopolitan
 			alert.RaisedAt.Local().Format("2006-01-02 15:04 MST"),
 			alert.Severity, agentName, alert.Product, alert.Description)
 		o.Output = append(o.Output, output)
@@ -78,6 +79,7 @@ func (o *AlertOverview) GetSummary() string {
 	return "alerts: " + strings.Join(states, ", ")
 }
 
+// nolint: gocritic
 func (o *AlertOverview) GetStatus() int {
 	if o.High > 0 {
 		return check.Critical
