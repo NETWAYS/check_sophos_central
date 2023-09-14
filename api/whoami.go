@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type UserInfo struct {
@@ -49,12 +47,10 @@ func (c *Client) WhoAmI() (err error) {
 
 	// parse and set additional API endpoints
 	if val, ok := info.APIHosts["global"]; ok && c.BaseURL != val {
-		log.WithField("url", val).Debug("Updating BaseURL for API from whoami global info")
 		c.BaseURL = val
 	}
 
 	if val, ok := info.APIHosts["dataRegion"]; ok {
-		log.WithField("url", val).Debug("Setting DataURL for API from whoami dataRegion info")
 		c.DataURL = val
 	} else {
 		err = fmt.Errorf("missing dataRegion value under apiHosts in whoami: %s", string(body))
@@ -63,7 +59,6 @@ func (c *Client) WhoAmI() (err error) {
 
 	// set TenantID when Token belongs to a tenant
 	if info.IDType == "tenant" && c.TenantID == "" {
-		log.WithField("tenant", info.ID).Debug("setting tenantID from whoami info")
 		c.TenantID = info.ID
 	}
 

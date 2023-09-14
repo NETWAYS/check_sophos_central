@@ -8,7 +8,6 @@ import (
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 )
 
@@ -76,8 +75,6 @@ func (c *Config) Run() (rc int, output string, err error) {
 	if err != nil {
 		return
 	}
-
-	log.WithField("context-id", client.UserInfo.ID).Debug("successfully authenticated with the API")
 
 	// Retrieve and check endpoints.
 	endpoints, names, err := CheckEndpoints(client, c.ExcludeEndpoints)
