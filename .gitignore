@@ -1,6 +1,7 @@
 .*.sw[opa]
 *~
 /build/
+/dist/
 check_sophos_central
 .env*
 *.out
