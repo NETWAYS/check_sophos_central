@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
@@ -75,9 +76,9 @@ func (o *EndpointOverview) GetStatus() int {
 		return check.Critical
 	} else if len(o.Suspicious) > 0 || len(o.Unknown) > 0 {
 		return check.Warning
-	} else {
-		return check.OK
 	}
+
+	return check.OK
 }
 
 func (o *EndpointOverview) GetOutput(limit int) (s string) {
@@ -104,10 +105,10 @@ func (o *EndpointOverview) GetOutput(limit int) (s string) {
 
 func (o *EndpointOverview) GetPerfdata() string {
 	return PerfdataList{
-		{Name: "endpoints_total", Value: fmt.Sprintf("%d", o.Total)},
-		{Name: "endpoints_good", Value: fmt.Sprintf("%d", len(o.Good))},
-		{Name: "endpoints_bad", Value: fmt.Sprintf("%d", len(o.Bad))},
-		{Name: "endpoints_suspicious", Value: fmt.Sprintf("%d", len(o.Suspicious))},
-		{Name: "endpoints_unknown", Value: fmt.Sprintf("%d", len(o.Unknown))},
+		{Name: "endpoints_total", Value: strconv.Itoa(o.Total)},
+		{Name: "endpoints_good", Value: strconv.Itoa(len(o.Good))},
+		{Name: "endpoints_bad", Value: strconv.Itoa(len(o.Bad))},
+		{Name: "endpoints_suspicious", Value: strconv.Itoa(len(o.Suspicious))},
+		{Name: "endpoints_unknown", Value: strconv.Itoa(len(o.Unknown))},
 	}.String()
 }

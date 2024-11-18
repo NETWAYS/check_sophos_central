@@ -97,9 +97,9 @@ func (c *Client) GetResults(request *http.Request) (items []json.RawMessage, err
 		} else if response.Pages.NextKey == nextKey {
 			err = fmt.Errorf("iteration error in pages, nextKey is the same as fromKey: %s", nextKey)
 			return
-		} else {
-			nextKey = response.Pages.NextKey
 		}
+
+		nextKey = response.Pages.NextKey
 	}
 
 	return
