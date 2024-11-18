@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -65,12 +66,12 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 
 func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.Request, err error) {
 	if c.DataURL == "" {
-		err = fmt.Errorf("DataURL is not set, call whoami first")
+		err = errors.New("DataURL is not set, call whoami first")
 		return
 	}
 
 	if c.TenantID == "" {
-		err = fmt.Errorf("TenantID is not configured")
+		err = errors.New("TenantID is not configured")
 		return
 	}
 
@@ -81,7 +82,7 @@ func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.R
 		return
 	}
 
-	req.Header.Set("X-Tenant-ID", c.TenantID)
+	req.Header.Set("X-Tenant-Id", c.TenantID)
 
 	return
 }

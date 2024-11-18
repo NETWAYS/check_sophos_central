@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/NETWAYS/check_sophos_central/api"
@@ -85,9 +86,9 @@ func (o *AlertOverview) GetStatus() int {
 		return check.Critical
 	} else if o.Medium > 0 || o.Low > 0 {
 		return check.Warning
-	} else {
-		return check.OK
 	}
+
+	return check.OK
 }
 
 func (o *AlertOverview) GetOutput() (s string) {
@@ -104,9 +105,9 @@ func (o *AlertOverview) GetOutput() (s string) {
 
 func (o *AlertOverview) GetPerfdata() string {
 	return PerfdataList{
-		{Name: "alerts", Value: fmt.Sprintf("%d", o.Total)},
-		{Name: "alerts_high", Value: fmt.Sprintf("%d", o.High)},
-		{Name: "alerts_medium", Value: fmt.Sprintf("%d", o.Medium)},
-		{Name: "alerts_low", Value: fmt.Sprintf("%d", o.Low)},
+		{Name: "alerts", Value: strconv.Itoa(o.Total)},
+		{Name: "alerts_high", Value: strconv.Itoa(o.High)},
+		{Name: "alerts_medium", Value: strconv.Itoa(o.Medium)},
+		{Name: "alerts_low", Value: strconv.Itoa(o.Low)},
 	}.String()
 }
