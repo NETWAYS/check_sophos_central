@@ -1,4 +1,4 @@
-.PHONY: test coverage lint vet
+.PHONY: build test coverage lint vet
 
 build:
 	go build
