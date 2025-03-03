@@ -15,7 +15,6 @@ linters:
      - godox
      - err113
      - gofumpt
-     - gomnd
      - lll
      - musttag
      - nakedret
@@ -25,10 +24,3 @@ linters:
      - tagliatelle
      - varnamelen
      - wrapcheck
-linters-settings:
-   estif:
-     min-complexity: 4
-   maligned:
-     suggest-new: true
-   funlen:
-     lines: 80
