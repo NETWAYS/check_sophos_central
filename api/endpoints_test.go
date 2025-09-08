@@ -3,7 +3,6 @@ package api_test
 import (
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/jarcoal/httpmock"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 )
@@ -113,7 +112,9 @@ func TestEndpoint_String(t *testing.T) {
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			assert.Equal(t, tc.expected, tc.endpoint.String())
+			if tc.expected != tc.endpoint.String() {
+				t.Fatalf("expected %v, got %v", tc.expected, tc.endpoint.String())
+			}
 		})
 	}
 }
@@ -122,10 +123,14 @@ func TestClient_GetEndpoints(t *testing.T) {
 	c := envClient(t)
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	_, err = c.GetEndpoints()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 }
 
 func TestClient_GetEndpoints_Mock(t *testing.T) {
@@ -138,8 +143,12 @@ func TestClient_GetEndpoints_Mock(t *testing.T) {
 		})
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	_, err = c.GetEndpoints()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 }

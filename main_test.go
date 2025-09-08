@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -26,7 +25,9 @@ func TestMainCheck_matches(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			actual := matches(tc.input, tc.regex)
-			assert.Equal(t, tc.expected, actual)
+			if tc.expected != actual {
+				t.Fatalf("expected %v, got %v", tc.expected, actual)
+			}
 		})
 	}
 }
@@ -45,7 +46,9 @@ func TestMainAlerts_GetPerfdata(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			actual := tc.ao.GetPerfdata()
-			assert.Equal(t, tc.expected, actual)
+			if tc.expected != actual {
+				t.Fatalf("expected %v, got %v", tc.expected, actual)
+			}
 		})
 	}
 }
@@ -67,7 +70,9 @@ func TestMainAlerts_GetOutput(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			actual := tc.ao.GetOutput()
-			assert.Equal(t, tc.expected, actual)
+			if tc.expected != actual {
+				t.Fatalf("expected %v, got %v", tc.expected, actual)
+			}
 		})
 	}
 }
@@ -98,7 +103,9 @@ func TestMainAlerts_GetStatus(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			actual := tc.ao.GetStatus()
-			assert.Equal(t, tc.expected, actual)
+			if tc.expected != actual {
+				t.Fatalf("expected %v, got %v", tc.expected, actual)
+			}
 		})
 	}
 }

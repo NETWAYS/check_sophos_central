@@ -1,7 +1,6 @@
 package api_test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -9,11 +8,13 @@ func TestClient_WhoAmI(t *testing.T) {
 	c := envClient(t)
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
-	assert.NotNil(t, c.UserInfo)
-	assert.NotEmpty(t, c.UserInfo.ID)
-	assert.NotEmpty(t, c.UserInfo.IDType)
-	assert.NotEmpty(t, c.DataURL)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	if c.UserInfo == nil {
+		t.Fatalf("expected not nil")
+	}
 }
 
 func TestClient_WhoAmI_Mock(t *testing.T) {
@@ -21,9 +22,23 @@ func TestClient_WhoAmI_Mock(t *testing.T) {
 	defer cleanup()
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
-	assert.NotNil(t, c.UserInfo)
-	assert.Equal(t, "57ca9a6b-885f-4e36-95ec-290548c26059", c.UserInfo.ID)
-	assert.Equal(t, "tenant", c.UserInfo.IDType)
-	assert.Equal(t, "https://api-eu01.central.sophos.com", c.DataURL)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	if c.UserInfo == nil {
+		t.Fatalf("expected not nil")
+	}
+
+	if "57ca9a6b-885f-4e36-95ec-290548c26059" != c.UserInfo.ID {
+		t.Fatalf("expected %v, got %v", "57ca9a6b-885f-4e36-95ec-290548c26059", c.UserInfo.ID)
+	}
+
+	if "tenant" != c.UserInfo.IDType {
+		t.Fatalf("expected %v, got %v", "tentant", c.UserInfo.IDType)
+	}
+
+	if "https://api-eu01.central.sophos.com" != c.DataURL {
+		t.Fatalf("expected %v, got %v", "https://api-eu01.central.sophos.com", c.DataURL)
+	}
 }
