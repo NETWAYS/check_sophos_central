@@ -2,7 +2,6 @@ package api_test
 
 import (
 	"github.com/jarcoal/httpmock"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"strings"
 	"testing"
@@ -45,11 +44,17 @@ func TestClient_GetResults(t *testing.T) {
 		})
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	req, err := c.NewDataRequest("GET", "common/v1/test", nil)
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	_, err = c.GetResults(req)
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 }

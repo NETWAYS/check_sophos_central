@@ -3,7 +3,6 @@ package api_test
 import (
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/jarcoal/httpmock"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
@@ -68,7 +67,9 @@ func TestAlert_String(t *testing.T) {
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			assert.Equal(t, tc.expected, tc.alert.String())
+			if tc.expected != tc.alert.String() {
+				t.Fatalf("expected %v, got %v", tc.expected, tc.alert.String())
+			}
 		})
 	}
 }
@@ -77,10 +78,14 @@ func TestClient_GetAlerts(t *testing.T) {
 	c := envClient(t)
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	_, err = c.GetAlerts()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 }
 
 func TestClient_GetAlerts_Mock(t *testing.T) {
@@ -93,8 +98,12 @@ func TestClient_GetAlerts_Mock(t *testing.T) {
 		})
 
 	err := c.WhoAmI()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 
 	_, err = c.GetAlerts()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
 }
