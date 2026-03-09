@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
+	"github.com/NETWAYS/go-check/perfdata"
 )
 
 type AlertOverview struct {
@@ -17,7 +17,7 @@ type AlertOverview struct {
 	Output []string
 }
 
-// Retrieve and process Alerts.
+// CheckAlerts retrieves and processes alerts.
 // alertsToExclude is a list of strings that can the used to exclude alerts.
 func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []string) (o *AlertOverview, err error) {
 	o = &AlertOverview{}
@@ -80,7 +80,6 @@ func (o *AlertOverview) GetSummary() string {
 	return "alerts: " + strings.Join(states, ", ")
 }
 
-// nolint: gocritic
 func (o *AlertOverview) GetStatus() int {
 	if o.High > 0 {
 		return check.Critical
@@ -104,10 +103,12 @@ func (o *AlertOverview) GetOutput() (s string) {
 }
 
 func (o *AlertOverview) GetPerfdata() string {
-	return PerfdataList{
-		{Name: "alerts", Value: strconv.Itoa(o.Total)},
-		{Name: "alerts_high", Value: strconv.Itoa(o.High)},
-		{Name: "alerts_medium", Value: strconv.Itoa(o.Medium)},
-		{Name: "alerts_low", Value: strconv.Itoa(o.Low)},
-	}.String()
+	tmp := perfdata.PerfdataList{
+		{Label: "alerts", Value: o.Total},
+		{Label: "alerts_high", Value: o.High},
+		{Label: "alerts_medium", Value: o.Medium},
+		{Label: "alerts_low", Value: o.Low},
+	}
+
+	return tmp.String()
 }

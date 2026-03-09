@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
+	"github.com/NETWAYS/go-check/perfdata"
 )
 
 type EndpointOverview struct {
@@ -104,11 +104,13 @@ func (o *EndpointOverview) GetOutput(limit int) (s string) {
 }
 
 func (o *EndpointOverview) GetPerfdata() string {
-	return PerfdataList{
-		{Name: "endpoints_total", Value: strconv.Itoa(o.Total)},
-		{Name: "endpoints_good", Value: strconv.Itoa(len(o.Good))},
-		{Name: "endpoints_bad", Value: strconv.Itoa(len(o.Bad))},
-		{Name: "endpoints_suspicious", Value: strconv.Itoa(len(o.Suspicious))},
-		{Name: "endpoints_unknown", Value: strconv.Itoa(len(o.Unknown))},
-	}.String()
+	tmp := perfdata.PerfdataList{
+		{Label: "endpoints_total", Value: o.Total},
+		{Label: "endpoints_good", Value: len(o.Good)},
+		{Label: "endpoints_bad", Value: len(o.Bad)},
+		{Label: "endpoints_suspicious", Value: len(o.Suspicious)},
+		{Label: "endpoints_unknown", Value: len(o.Unknown)},
+	}
+
+	return tmp.String()
 }
