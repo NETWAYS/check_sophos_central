@@ -18,7 +18,7 @@ type AlertOverview struct {
 	Output []string
 }
 
-// Retrieve and process Alerts.
+// CheckAlerts retrieves and processes alerts.
 // alertsToExclude is a list of strings that can the used to exclude alerts.
 func CheckAlerts(client *api.Client, names EndpointNames, alertsToExclude []string) (o *AlertOverview, err error) {
 	o = &AlertOverview{}
@@ -81,7 +81,6 @@ func (o *AlertOverview) GetSummary() string {
 	return "alerts: " + strings.Join(states, ", ")
 }
 
-// nolint: gocritic
 func (o *AlertOverview) GetStatus() int {
 	if o.High > 0 {
 		return check.Critical

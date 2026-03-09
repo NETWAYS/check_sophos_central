@@ -76,7 +76,6 @@ func (c *Client) NewDataRequest(method, url string, body io.Reader) (req *http.R
 	}
 
 	req, err = http.NewRequestWithContext(context.Background(), method, c.DataURL+"/"+url, body)
-
 	if err != nil {
 		err = fmt.Errorf("could not create http request: %w", err)
 		return
