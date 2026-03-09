@@ -39,7 +39,7 @@ func TestMainAlerts_GetPerfdata(t *testing.T) {
 	}{
 		"simple-overview": {
 			ao:       AlertOverview{},
-			expected: "'alerts'=0 'alerts_high'=0 'alerts_medium'=0 'alerts_low'=0",
+			expected: "alerts=0 alerts_high=0 alerts_medium=0 alerts_low=0",
 		},
 	}
 

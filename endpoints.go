@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
@@ -106,11 +105,11 @@ func (o *EndpointOverview) GetOutput(limit int) (s string) {
 
 func (o *EndpointOverview) GetPerfdata() string {
 	tmp := perfdata.PerfdataList{
-		{Label: "endpoints_total", Value: strconv.Itoa(o.Total)},
-		{Label: "endpoints_good", Value: strconv.Itoa(len(o.Good))},
-		{Label: "endpoints_bad", Value: strconv.Itoa(len(o.Bad))},
-		{Label: "endpoints_suspicious", Value: strconv.Itoa(len(o.Suspicious))},
-		{Label: "endpoints_unknown", Value: strconv.Itoa(len(o.Unknown))},
+		{Label: "endpoints_total", Value: o.Total},
+		{Label: "endpoints_good", Value: len(o.Good)},
+		{Label: "endpoints_bad", Value: len(o.Bad)},
+		{Label: "endpoints_suspicious", Value: len(o.Suspicious)},
+		{Label: "endpoints_unknown", Value: len(o.Unknown)},
 	}
 
 	return tmp.String()

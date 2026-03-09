@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/NETWAYS/check_sophos_central/api"
@@ -105,10 +104,10 @@ func (o *AlertOverview) GetOutput() (s string) {
 
 func (o *AlertOverview) GetPerfdata() string {
 	tmp := perfdata.PerfdataList{
-		{Label: "alerts", Value: strconv.Itoa(o.Total)},
-		{Label: "alerts_high", Value: strconv.Itoa(o.High)},
-		{Label: "alerts_medium", Value: strconv.Itoa(o.Medium)},
-		{Label: "alerts_low", Value: strconv.Itoa(o.Low)},
+		{Label: "alerts", Value: o.Total},
+		{Label: "alerts_high", Value: o.High},
+		{Label: "alerts_medium", Value: o.Medium},
+		{Label: "alerts_low", Value: o.Low},
 	}
 
 	return tmp.String()
