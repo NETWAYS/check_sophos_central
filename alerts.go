@@ -7,6 +7,7 @@ import (
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
+	"github.com/NETWAYS/go-check/perfdata"
 )
 
 type AlertOverview struct {
@@ -104,10 +105,12 @@ func (o *AlertOverview) GetOutput() (s string) {
 }
 
 func (o *AlertOverview) GetPerfdata() string {
-	return PerfdataList{
-		{Name: "alerts", Value: strconv.Itoa(o.Total)},
-		{Name: "alerts_high", Value: strconv.Itoa(o.High)},
-		{Name: "alerts_medium", Value: strconv.Itoa(o.Medium)},
-		{Name: "alerts_low", Value: strconv.Itoa(o.Low)},
-	}.String()
+	tmp := perfdata.PerfdataList{
+		{Label: "alerts", Value: strconv.Itoa(o.Total)},
+		{Label: "alerts_high", Value: strconv.Itoa(o.High)},
+		{Label: "alerts_medium", Value: strconv.Itoa(o.Medium)},
+		{Label: "alerts_low", Value: strconv.Itoa(o.Low)},
+	}
+
+	return tmp.String()
 }
