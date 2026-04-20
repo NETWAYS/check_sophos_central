@@ -24,7 +24,7 @@ func testClient() (*api.Client, func()) {
 
 	httpmock.RegisterResponder("POST", "https://id.sophos.com/api/v2/oauth2/token",
 		func(req *http.Request) (*http.Response, error) {
-			body := map[string]interface{}{
+			body := map[string]any{
 				"access_token":  "<jwt>",
 				"errorCode":     "success",
 				"expires_in":    3600,
@@ -38,7 +38,7 @@ func testClient() (*api.Client, func()) {
 
 	httpmock.RegisterResponder("GET", "https://api.central.sophos.com/whoami/v1",
 		func(req *http.Request) (*http.Response, error) {
-			body := map[string]interface{}{
+			body := map[string]any{
 				"id":     "57ca9a6b-885f-4e36-95ec-290548c26059",
 				"idType": "tenant",
 				"apiHosts": map[string]string{
