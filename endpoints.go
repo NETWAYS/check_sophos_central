@@ -5,7 +5,6 @@ import (
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
-	"github.com/NETWAYS/go-check/perfdata"
 )
 
 type EndpointOverview struct {
@@ -70,7 +69,7 @@ func (o *EndpointOverview) GetSummary() (s string) {
 	return
 }
 
-func (o *EndpointOverview) GetStatus() int {
+func (o *EndpointOverview) GetStatus() check.Status {
 	// nolint: gocritic
 	if len(o.Bad) > 0 {
 		return check.Critical
@@ -104,7 +103,7 @@ func (o *EndpointOverview) GetOutput(limit int) (s string) {
 }
 
 func (o *EndpointOverview) GetPerfdata() string {
-	tmp := perfdata.PerfdataList{
+	tmp := check.PerfdataList{
 		{Label: "endpoints_total", Value: o.Total},
 		{Label: "endpoints_good", Value: len(o.Good)},
 		{Label: "endpoints_bad", Value: len(o.Bad)},
