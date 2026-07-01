@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/NETWAYS/go-check"
 )
 
 func TestMainCheck_matches(t *testing.T) {
@@ -80,23 +82,23 @@ func TestMainAlerts_GetOutput(t *testing.T) {
 func TestMainAlerts_GetStatus(t *testing.T) {
 	testcases := map[string]struct {
 		ao       AlertOverview
-		expected int
+		expected check.Status
 	}{
 		"simple-overview": {
 			ao:       AlertOverview{},
-			expected: 0,
+			expected: check.OK,
 		},
 		"simple-warning": {
 			ao: AlertOverview{
 				Medium: 1,
 			},
-			expected: 1,
+			expected: check.Warning,
 		},
 		"simple-critical": {
 			ao: AlertOverview{
 				High: 1,
 			},
-			expected: 2,
+			expected: check.Critical,
 		},
 	}
 

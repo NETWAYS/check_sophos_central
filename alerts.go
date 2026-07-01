@@ -6,7 +6,6 @@ import (
 
 	"github.com/NETWAYS/check_sophos_central/api"
 	"github.com/NETWAYS/go-check"
-	"github.com/NETWAYS/go-check/perfdata"
 )
 
 type AlertOverview struct {
@@ -80,7 +79,7 @@ func (o *AlertOverview) GetSummary() string {
 	return "alerts: " + strings.Join(states, ", ")
 }
 
-func (o *AlertOverview) GetStatus() int {
+func (o *AlertOverview) GetStatus() check.Status {
 	if o.High > 0 {
 		return check.Critical
 	} else if o.Medium > 0 || o.Low > 0 {
@@ -103,7 +102,7 @@ func (o *AlertOverview) GetOutput() (s string) {
 }
 
 func (o *AlertOverview) GetPerfdata() string {
-	tmp := perfdata.PerfdataList{
+	tmp := check.PerfdataList{
 		{Label: "alerts", Value: o.Total},
 		{Label: "alerts_high", Value: o.High},
 		{Label: "alerts_medium", Value: o.Medium},

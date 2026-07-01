@@ -66,7 +66,7 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-func (c *Config) Run() (rc int, output string, err error) {
+func (c *Config) Run() (rc check.Status, output string, err error) {
 	// Setup API client.
 	client := api.NewClient(c.ClientID, c.ClientSecret)
 	client.PageSize = c.PageSize
